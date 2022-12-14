@@ -1,10 +1,9 @@
-main()
-async function main() {
+(async function() {
     const products = await getProducts()
     for (product of products) {
         displayProduct(products)
     }
-}
+})()
 
 function getProducts() {
     return fetch("http://localhost:3000/api/products")
