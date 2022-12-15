@@ -32,3 +32,32 @@ function hydrateProduct(product) {
         color.innerHTML += `<option value="${product.colors[i]}">${product.colors[i]}</option>`
     }
 }
+
+//input pour la quantité
+/*function quantityvalue(){
+    const itemQuantity = document.getElementById("quantity").value
+    return itemQuantity
+}
+//récupérer la couleur choisi du produit
+function colorValue(){
+    const color = document.getElementById("colors").value
+    return color
+}*/
+
+//récupérer les articles dans le panier
+const button = document.querySelector("#addToCart")
+if (button != null){
+    button.addEventListener("click", (e) =>{ 
+    const itemQuantity = document.getElementById("quantity").value
+    const color = document.getElementById("colors").value
+    if (color == null || color == "" || itemQuantity == null || itemQuantity==0){
+        alert("please select color and quantity")
+    }
+    let cart = {
+        color: color,
+        quantity: itemQuantity,
+    }
+    let cartlinea = JSON.stringify(cart);
+    localStorage.setItem("cart", cartlinea)
+})
+}
