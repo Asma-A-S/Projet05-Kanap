@@ -27,8 +27,8 @@ function hydrateProduct(product) {
     document.getElementById("description").textContent = product.description
     let image = document.querySelector(".item__img");
     image.innerHTML = `<img src="${product.imageUrl}" alt="${product.altTxt}">`
-    /*let color = document.getElementById("colors");
-    for (i=0; i<products.color.length; i++) {
-        color.innerHTML += `option value="${products.colors[i]}">${products.colors[i]}</option>`
-    }*/
+    let color = document.getElementById("colors")
+    for (i=0; i<product.colors.length; i++) {
+        color.innerHTML += `<option value="${product.colors[i]}">${product.colors[i]}</option>`
+    }
 }
