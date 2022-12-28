@@ -51,37 +51,42 @@ function hydrateProduct(product) {
 }
 //récupérer les articles dans le panier
 const button = document.querySelector("#addToCart")
-if (button != null){
-    button.addEventListener("click", (e) =>{ 
-    const itemQuantity = document.getElementById("quantity").value
-    const color = document.getElementById("colors").value
-    if (color == null || color == "" || itemQuantity == null || itemQuantity==0){
-        alert("please select color and quantity")
-        return
-    }
+if (button != null) {
+    button.addEventListener("click", (e) => {
+        const itemQuantity = document.getElementById("quantity").value
+        const color = document.getElementById("colors").value
+        if (color == null || color == "" || itemQuantity == null || itemQuantity == 0) {
+            alert("please select color and quantity")
+            return
+        }
     let cart = {
-        color: color,
-        quantity: parseInt(itemQuantity),
-        Id: getProductId(),
-    }
-    let panier = JSON.parse(localStorage.getItem("cart"));
-    console.log(panier, typeof panier)
-    if (panier == null ){
-        panier = [];
-        panier.push(cart)
-    }
-    else{
-        for (i = 0; i <panier.length; i++){
-            if(
-                panier[i].Id == cart.Id &&
-                panier[i].color == cart.color
-            ){
-                return panier[i].quantity =  panier[i].quantity + cart.quantity
+            color: color,
+            quantity: parseInt(itemQuantity),
+            Id: getProductId(),
+        }
+        let panier = JSON.parse(localStorage.getItem("cart"));
+        console.log(panier)
+        if(panier == null) {
+            panier = [];
+            panier.push(cart);
+            localStorage.setItem("cart", JSON.stringify(panier))
+            console.table(panier)
+        }
+        else if(panier) {
+            const panierExist = panier.find(
+                (panierExist) =>
+                    panierExist.Id === cart.Id && panierExist.color === cart.color);
+            if (panierExist) {
+                let newQuantity = parseInt(panierExist.quantity) + cart.quantity;
+                panierExist.quantity = newQuantity;
+                console.table(panier)
             }
-        }
+            else{
             panier.push(cart)
+            console.table(panier)
+            }
+            localStorage.setItem("cart", JSON.stringify(panier));
         }
-    localStorage.setItem("cart", JSON.stringify(panier));
-    window.location.href = "cart.html"
-})}
-
+        window.location.href = "cart.html"
+    })
+}
