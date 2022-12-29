@@ -60,9 +60,10 @@ if (button != null) {
             return
         }
     let cart = {
+            Id: getProductId(),
             color: color,
             quantity: parseInt(itemQuantity),
-            Id: getProductId(),
+            
         }
         let panier = JSON.parse(localStorage.getItem("cart"));
         console.log(panier)
