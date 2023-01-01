@@ -97,6 +97,29 @@ settingsDelete.appendChild(deleteProduct);
 deleteProduct.className = "deleteItem"
 deleteProduct.textContent = "supprimer"
 }
+//modifier la quantité dans la page panier, 
+function editProduct(){
+  const editQuantities= document.querySelectorAll(".itemQuantity")
+  editQuantities.forEach((editQuantity)=>{
+    editQuantity.addEventListener("change", ()=>{
+    let itemToChange = editQuantity.closest("article");
+    let itemId = itemToChange.getAttribute("data-id");
+    let itemColor = itemToChange.getAttribute("data-color");
+    console.log(itemToChange)
+    // comparer le id et couleur de l'article auquel on veut changer la quantité avec l'article qui existe déja dans le panier, ensuite on enregister dans le localstorage
+    for (let l = 0; l<cartPanier.length; l++){
+      if(itemId == cartPanier[l].id &&
+        itemColor == cartPanier[l].color){
+        cartPanier[l].quantity = this.value;
+        console.log(cartPanier[l].quantity)
+        localStorage.setItem("cart", JSON.stringify(cartPanier));
+        console.log(cartPanier)
+        }
+        location.reload()
+    }
+  }
+
+  )})}
 
 //--------suppression---
 function deleteProduct(){
@@ -116,6 +139,19 @@ for (let k=0; k < deleteBtn.length; k++){
     location.reload()
       }
 )}}
+
+//total quantité et prix
+function totalQuantity(product, item){
+  let totalQuantity = 0;
+  let totalPrice = 0;
+  /*for (product of cartPanier){
+    let currentItem = cartPanier.find((produit)=>
+    return produit.id == product.id);*/
+  totalQuantity += product.quantity;
+  totalPrice += product.quantity* item.price;}
+  document.getElementById("totalQuantity").innerHTML = totalQuantity;
+  document.getElementById("totalPrice").innerHTML = totalPrice
+
 
 //formulaire
 // récupérer les Id des articles dans le panier pour le body de la requête
@@ -144,9 +180,10 @@ function formValid(){
   addressValid()
   cityValid();
   emailValid();
-  if(errorMsg.length == 0){
+  if(errorMsg.length == 0 && cartPanier.length !== 0){
     return true
     } 
+    alert("panier vide")
     return false
   }
 
