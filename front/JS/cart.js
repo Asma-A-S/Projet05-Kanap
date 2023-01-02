@@ -17,15 +17,13 @@ function getProduct(productId) {
 /*var cartPanierJson = JSON.parse(cartPanier);*/
 /*console.log(cartPanierJSON)*/
 (async function () {
-  let totalQuantity = 0;
-  let totalPrice = 0;
   for (product of cartPanier) {
     const item = await getProduct(product.Id)
-    totalQuantity += product.quantity
-    totalPrice += (product.quantity * item.price)
     console.log(item)
     displayProduct(item)
+    editProduct()
     deleteProduct()
+    /*totalQuantity(item)*/
   }
   document.getElementById("totalQuantity").innerHTML = totalQuantity;
   document.getElementById("totalPrice").innerHTML = totalPrice
@@ -98,29 +96,45 @@ deleteProduct.className = "deleteItem"
 deleteProduct.textContent = "supprimer"
 }
 //modifier la quantité dans la page panier, 
-function editProduct(){
-  const editQuantities= document.querySelectorAll(".itemQuantity")
-  editQuantities.forEach((editQuantity)=>{
-    editQuantity.addEventListener("change", ()=>{
-    let itemToChange = editQuantity.closest("article");
+function editProduct() {
+  let editQuantity = document.querySelectorAll(".itemQuantity")
+  for (let n = 0; n < editQuantity.length; n++) {
+    let itemToChange = editQuantity[n].closest("article");
     let itemId = itemToChange.getAttribute("data-id");
     let itemColor = itemToChange.getAttribute("data-color");
-    console.log(itemToChange)
-    // comparer le id et couleur de l'article auquel on veut changer la quantité avec l'article qui existe déja dans le panier, ensuite on enregister dans le localstorage
-    for (let l = 0; l<cartPanier.length; l++){
+    let newQuantity = editQuantity[n].getAttribute("value");
+    editQuantity[n].addEventListener("change", (e) => {
+      e.preventDefault();
+      if (e.target.value > 1 && e.target.value < 100) {
+        newQuantity = parseInt(e.target.value);
+      } else {
+        alert("veuillez choisir une quantité comprise entre 1 et 100");
+        newQuantity = 1;
+      }
+      for (product of cartPanier) {
+        if (itemId == product.Id &&
+          itemColor == product.color) {
+          product.quantity = newQuantity;
+          localStorage.setItem("cart", JSON.stringify(cartPanier));
+          location.reload()
+        }
+      }
+    })
+  }
+}
+
+   /* /
+    // comparer le id et couleur de l'article auquel on veut changer la quantité avec l'article qui existe déja dans le panier, ensuite on enregister dans le localq
+    /*for (let l = 0; l<cartPanier.length; l++){
       if(itemId == cartPanier[l].id &&
         itemColor == cartPanier[l].color){
-        cartPanier[l].quantity = this.value;
+        cartPanier[l].quantity = newQuantity;
         console.log(cartPanier[l].quantity)
         localStorage.setItem("cart", JSON.stringify(cartPanier));
-        console.log(cartPanier)
+        console.log(cartPanier);
         }
-        location.reload()
-    }
-  }
-
-  )})}
-
+    }*/
+    
 //--------suppression---
 function deleteProduct(){
 const deleteBtn = document.querySelectorAll(".deleteItem");
@@ -141,16 +155,17 @@ for (let k=0; k < deleteBtn.length; k++){
 )}}
 
 //total quantité et prix
-function totalQuantity(product, item){
+/*function totalQuantity(item){
   let totalQuantity = 0;
   let totalPrice = 0;
-  /*for (product of cartPanier){
-    let currentItem = cartPanier.find((produit)=>
-    return produit.id == product.id);*/
-  totalQuantity += product.quantity;
-  totalPrice += product.quantity* item.price;}
+  for (let m=0; m<cartPanier.length; m++){
+    totalQuantity += cartPanier[m].quantity;
+    console.log(totalQuantity)
+    totalPrice += (cartPanier[m].quantity * item.price);
+  console.log(totalPrice)}
   document.getElementById("totalQuantity").innerHTML = totalQuantity;
-  document.getElementById("totalPrice").innerHTML = totalPrice
+  document.getElementById("totalPrice").innerHTML = totalPrice;
+}*/
 
 
 //formulaire
