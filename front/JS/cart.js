@@ -23,10 +23,8 @@ function getProduct(productId) {
     displayProduct(item)
     editProduct()
     deleteProduct()
-    /*totalQuantity(item)*/
+    totalQuantityPrice(item)
   }
-  document.getElementById("totalQuantity").innerHTML = totalQuantity;
-  document.getElementById("totalPrice").innerHTML = totalPrice
 })()
 
 /*création de la balise article*/
@@ -49,51 +47,51 @@ function displayProduct(item){
   img.setAttribute("alt", item.altTxt)
 
 //balise content
-let divContent = document.createElement("div")
-child.appendChild(divContent)
-divContent.className = "cart__item__content"
+  let divContent = document.createElement("div")
+  child.appendChild(divContent)
+  divContent.className = "cart__item__content"
 
-let divDescription = document.createElement("div")
-divContent.appendChild(divDescription)
-divDescription.className = "cart__item__content__description"
+  let divDescription = document.createElement("div")
+  divContent.appendChild(divDescription)
+  divDescription.className = "cart__item__content__description"
 
-let title = document.createElement("h2")
+  let title = document.createElement("h2")
   divDescription.appendChild(title)
-title.textContent = item.name
-let itemColor = document.createElement("p")
-divDescription.appendChild(itemColor)
-itemColor.textContent = product.color
-let itemPrice = document.createElement("p")
-divDescription.appendChild(itemPrice)
-itemPrice.textContent = item.price + ` €`
+  title.textContent = item.name
+  let itemColor = document.createElement("p")
+  divDescription.appendChild(itemColor)
+  itemColor.textContent = product.color
+  let itemPrice = document.createElement("p")
+  divDescription.appendChild(itemPrice)
+  itemPrice.textContent = item.price + ` €`
 
-let settings = document.createElement("div")
-divContent.appendChild(settings)
-settings.className = "cart__item__content__settings"
-let settingsQuantity = document.createElement("div")
-settings.appendChild(settingsQuantity)
-settingsQuantity.className = "cart__item__content__settings__quantity"
-let settingsQuantityP = document.createElement("p")
-settingsQuantity.appendChild(settingsQuantityP)
-settingsQuantityP.textContent = `Qté : `
-//création balise quantité
-let settingsInput = document.createElement("input")
-settingsQuantity.appendChild(settingsInput)
-settingsInput.className = "itemQuantity"
-settingsInput.setAttribute("type", "Number")
-settingsInput.setAttribute("name", "quantity")
-settingsInput.setAttribute("min", "1")
-settingsInput.setAttribute("max", "100")
-settingsInput.setAttribute("value", product.quantity)
+  let settings = document.createElement("div")
+  divContent.appendChild(settings)
+  settings.className = "cart__item__content__settings"
+  let settingsQuantity = document.createElement("div")
+  settings.appendChild(settingsQuantity)
+  settingsQuantity.className = "cart__item__content__settings__quantity"
+  let settingsQuantityP = document.createElement("p")
+  settingsQuantity.appendChild(settingsQuantityP)
+  settingsQuantityP.textContent = `Qté : `
+  //création balise quantité
+  let settingsInput = document.createElement("input")
+  settingsQuantity.appendChild(settingsInput)
+  settingsInput.className = "itemQuantity"
+  settingsInput.setAttribute("type", "Number")
+  settingsInput.setAttribute("name", "quantity")
+  settingsInput.setAttribute("min", "1")
+  settingsInput.setAttribute("max", "100")
+  settingsInput.setAttribute("value", product.quantity)
 
-//création bouton supprimer
-let settingsDelete = document.createElement("div")
-settings.appendChild(settingsDelete)
-settingsDelete.className = "cart__item__content__settings__delete";
-let deleteProduct = document.createElement("p")
-settingsDelete.appendChild(deleteProduct);
-deleteProduct.className = "deleteItem"
-deleteProduct.textContent = "supprimer"
+  //création bouton supprimer
+  let settingsDelete = document.createElement("div")
+  settings.appendChild(settingsDelete)
+  settingsDelete.className = "cart__item__content__settings__delete";
+  let deleteProduct = document.createElement("p")
+  settingsDelete.appendChild(deleteProduct);
+  deleteProduct.className = "deleteItem"
+  deleteProduct.textContent = "supprimer"
 }
 //modifier la quantité dans la page panier, 
 function editProduct() {
@@ -136,36 +134,52 @@ function editProduct() {
     }*/
     
 //--------suppression---
-function deleteProduct(){
-const deleteBtn = document.querySelectorAll(".deleteItem");
-console.log(deleteBtn)
-for (let k=0; k < deleteBtn.length; k++){
-  console.log(deleteBtn[k])
-  deleteBtn[k].addEventListener("click", (event) =>{
-    event.preventDefault();
-    let itemToDelete = deleteBtn[k].closest("article");
-    let deleteId = itemToDelete.getAttribute("data-id");
-    let deleteColor = itemToDelete.getAttribute("data-color");
-    cartPanier = cartPanier.filter((element) =>
-          deleteId !== element.Id && deleteColor !== element.color);
-    localStorage.setItem("cart", JSON.stringify(cartPanier));
-    console.log("article supprimé")
-    location.reload()
-      }
-)}}
+function deleteProduct() {
+  const deleteBtn = document.querySelectorAll(".deleteItem");
+  console.log(deleteBtn)
+  for (let k = 0; k < deleteBtn.length; k++) {
+    console.log(deleteBtn[k])
+    deleteBtn[k].addEventListener("click", (event) => {
+      event.preventDefault();
+      let itemToDelete = deleteBtn[k].closest("article");
+      let deleteId = itemToDelete.getAttribute("data-id");
+      let deleteColor = itemToDelete.getAttribute("data-color");
+      cartPanier = cartPanier.filter((element) =>
+        deleteId !== element.Id && deleteColor !== element.color);
+      localStorage.setItem("cart", JSON.stringify(cartPanier));
+      console.log("article supprimé")
+      location.reload()
+    }
+    )
+  }
+}
 
-//total quantité et prix
-/*function totalQuantity(item){
+//total quantité
+//créer un tableau qui rassemblera les valeurs des prix articles qui ont même I
+let total = []
+function totalQuantityPrice(item) {
   let totalQuantity = 0;
   let totalPrice = 0;
-  for (let m=0; m<cartPanier.length; m++){
+  for (let m = 0; m < cartPanier.length; m++) { 
+    if (item._id == cartPanier[m].Id) {
+      let cartPrice = cartPanier[m].quantity * item.price;
+      total.push(cartPrice);
+      console.log(total)
+    } 
+    if (total.length > 0) {
+      const reduce = total.reduce((a, b) => a + b, totalPrice);
+      document.getElementById("totalPrice").innerHTML = reduce;
+    } else {
+      document.getElementById("totalPrice").innerHTML = 0;
+    }
     totalQuantity += cartPanier[m].quantity;
-    console.log(totalQuantity)
-    totalPrice += (cartPanier[m].quantity * item.price);
-  console.log(totalPrice)}
-  document.getElementById("totalQuantity").innerHTML = totalQuantity;
-  document.getElementById("totalPrice").innerHTML = totalPrice;
-}*/
+    document.getElementById("totalQuantity").innerHTML = totalQuantity;
+  } 
+}
+
+
+//prix total du panierfunction totalPrice(item){
+  
 
 
 //formulaire
@@ -218,24 +232,28 @@ function formOrder(){
   emailValid()
 }
 function firstNameValid() {
-  let firstNameError = document.getElementById("firstNameErrorMsg")
-  if (firstName == "" || /^([A-Za-z]{3,20}-{0,1})?([A-Za-z]{3,20})$/.test(firstName)){
-    firstNameError.textContent = "enregistré"
+  let firstNameErrorMsg = document.getElementById("firstNameErrorMsg")
+  if (/^([A-Za-z]{3,20}-{0,1})?([A-Za-z]{3,20})$/.test(firstName)) {
+    firstNameErrorMsg.textContent = "enregistré"
     return true;
-  }else{
-    firstNameError.style.color = "red";
-    firstNameError.textContent = "Veuillez entrer un prénom valide";
+  } if (firstName == "") {
+    firstNameErrorMsg.textContent = "Veuillez renseigner votre prénom";
+  } else {
+    firstNameErrorMsg.textContent = "Veuillez entrer un prénom valide";
     errorMsg.push("error")
     return false;
   }
 }
 function lastNameValid() {
-  let lastNameError = document.getElementById("lastNameErrorMsg");
-  if (lastName == "" || /^([A-Za-z]{3,20}-{0,1})?([A-Za-z]{3,20})$/.test(lastName)) {
-    lastNameError.textContent ="enregistré"
+  let lastNameErrorMsg = document.getElementById("lastNameErrorMsg");
+  if (/^([A-Za-z]{3,20}-{0,1})?([A-Za-z]{3,20})$/.test(lastName)) {
+    lastNameErrorMsg.textContent = "enregistré"
     return true;
-  }else{
-    lastNameError.textContent = "Veuillez entrer un nom valide";
+  } if (lastName == "") {
+    lastNameErrorMsg.textContent = "Veuillez renseigner votre nom";
+  }
+  else {
+    lastNameErrorMsg.textContent = "Veuillez entrer un nom valide";
     errorMsg.push("error")
     return false;
   }
@@ -243,22 +261,26 @@ function lastNameValid() {
 
 function addressValid() {
   let addressErrorMsg = document.getElementById("addressErrorMsg")
-  if (address == "" || /^[a-zA-Z0-9\s,'-]{1,100}$/.test(address)){
+  if (/^[a-zA-Z0-9\s,'-]{1,100}$/.test(address)) {
     addressErrorMsg.textContent = "enregistré"
     return true;
-  }else{
+  } if (address == "") {
+    addressErrorMsg.textContent = "Veuillez renseigner votre adresse";
+  } else {
     addressErrorMsg.style.color = "red"
     addressErrorMsg.textContent = "Veuillez entrer une adresse valide"
     errorMsg.push("error")
     return false;
   }
-  }
+}
 function cityValid() {
   let cityErrorMsg = document.getElementById("cityErrorMsg")
-  if (city == "" || /^[a-zA-Zéèàïêç\-\s]{2,30}$/.test(city)){
+  if (/^[a-zA-Zéèàïêç\-\s]{2,30}$/.test(city)) {
     cityErrorMsg.textContent = "enregistré"
     return true;
-  }else{
+  } if (city == "") {
+    cityErrorMsg.textContent = "Veuillez renseigner votre ville";
+  } else {
     cityErrorMsg.style.color = "red"
     cityErrorMsg.textContent = "Veuillez entrer une ville valide";
     errorMsg.push("error")
@@ -267,19 +289,21 @@ function cityValid() {
 }
 function emailValid() {
   let emailErrorMsg = document.getElementById("emailErrorMsg")
-  if (email == "" || /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i.test(email)){
+  if (/^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i.test(email)) {
     emailErrorMsg.textContent = "enregistré"
     return true;
-  }else{
+  } if (email == "") {
+    emailErrorMsg.textContent = "Veuillez renseigner votre E-mail";
+  } else {
     emailErrorMsg.style.color = "red";
-    emailErrorMsg.textContent = "Veuillez entrer un email valide";
+    emailErrorMsg.textContent = "Veuillez entrer un E-mail valide";
     errorMsg.push("error")
     return false;
   }
-  }
-  
-function orderRequest(){
-  let contact ={
+}
+
+function orderRequest() {
+  let contact = {
     firstName: firstName,
     lastName: lastName,
     address: address,
@@ -287,10 +311,10 @@ function orderRequest(){
     email: email,
   }
   console.log(contact)
-  let products =[]
+  let products = []
   cartPanier.forEach(element => {
-  products.push(element.Id);
-  console.log(products)
+    products.push(element.Id);
+    console.log(products)
   });
 
   let object = {contact, products}
