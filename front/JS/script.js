@@ -4,17 +4,16 @@
         displayProduct(products)
     }
 })()
-
 function getProducts() {
     return fetch("http://localhost:3000/api/products")
         .then(function(response) {
-            return response.json()
+            return response.json();
         })
         .then(function(products) {
-            return products
+            return products;
         })
         .catch(function(error) {
-            alert(error)
+            alert(error);
         })
 }
 function displayProduct(){
@@ -28,5 +27,5 @@ function displayProduct(){
                 <h3 class="productName">${product.name}</h3>
                 <p class="productDescription">${product.description}</p>
             </article>
-        </a>`  
+        </a>`
 }
