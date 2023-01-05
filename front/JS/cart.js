@@ -120,25 +120,10 @@ function editProduct() {
     })
   }
 }
-
-   /* /
-    // comparer le id et couleur de l'article auquel on veut changer la quantité avec l'article qui existe déja dans le panier, ensuite on enregister dans le localq
-    /*for (let l = 0; l<cartPanier.length; l++){
-      if(itemId == cartPanier[l].id &&
-        itemColor == cartPanier[l].color){
-        cartPanier[l].quantity = newQuantity;
-        console.log(cartPanier[l].quantity)
-        localStorage.setItem("cart", JSON.stringify(cartPanier));
-        console.log(cartPanier);
-        }
-    }*/
-    
 //--------suppression---
 function deleteProduct() {
   const deleteBtn = document.querySelectorAll(".deleteItem");
-  console.log(deleteBtn)
   for (let k = 0; k < deleteBtn.length; k++) {
-    console.log(deleteBtn[k])
     deleteBtn[k].addEventListener("click", (event) => {
       event.preventDefault();
       let itemToDelete = deleteBtn[k].closest("article");
@@ -147,7 +132,7 @@ function deleteProduct() {
       cartPanier = cartPanier.filter((element) =>
         deleteId !== element.Id && deleteColor !== element.color);
       localStorage.setItem("cart", JSON.stringify(cartPanier));
-      console.log("article supprimé")
+      alert("article supprimé")
       location.reload()
     }
     )
@@ -164,7 +149,6 @@ function totalQuantityPrice(item) {
     if (item._id == cartPanier[m].Id) {
       let cartPrice = cartPanier[m].quantity * item.price;
       total.push(cartPrice);
-      console.log(total)
     } 
     if (total.length > 0) {
       const reduce = total.reduce((a, b) => a + b, totalPrice);
@@ -176,48 +160,9 @@ function totalQuantityPrice(item) {
     document.getElementById("totalQuantity").innerHTML = totalQuantity;
   } 
 }
+//valider la commande
 
-
-//prix total du panierfunction totalPrice(item){
-  
-
-
-//formulaire
-// récupérer les Id des articles dans le panier pour le body de la requête
-
-
-const orderButton = document.querySelector("#order")
-let firstName = ""; 
-let lastName = "";
-let address = "";
-let city= "";
-let email = "";
-orderButton.addEventListener("click", (e) => {
-  e.preventDefault();
-  if(formValid()){
-  formOrder()
-  orderRequest()
-  }})
-
-// vérifier si le formulaire est valide
-//liste des erreurs lors de la saisie
-let errorMsg = [];
-function formValid(){
-  //fonctions pour valider les inputs formulaire
-  firstNameValid();
-  lastNameValid()
-  addressValid()
-  cityValid();
-  emailValid();
-  if(errorMsg.length == 0 && cartPanier.length !== 0){
-    return true
-    } 
-    alert("panier vide")
-    return false
-  }
-
-//création formulaire
-function formOrder(){
+function formOrder() {
   const form = document.querySelector(".cart__order__form");
   //récupérer les éléments du formulaire
   firstName = form.elements.firstName.value
@@ -225,82 +170,91 @@ function formOrder(){
   address = form.elements.address.value
   city = form.elements.city.value
   email = form.elements.email.value;
-  firstNameValid()
-  lastNameValid()
-  addressValid()
-  cityValid()
-  emailValid()
+  firstNameValid(firstName);
+  lastNameValid(lastName);
+  addressValid(address);
+  cityValid(city);
+  emailValid(email)
 }
-function firstNameValid() {
+function firstNameValid(firstName) {
   let firstNameErrorMsg = document.getElementById("firstNameErrorMsg")
-  if (/^([A-Za-z]{3,20}-{0,1})?([A-Za-z]{3,20})$/.test(firstName)) {
+  if (firstName !== 0 && /^([A-Za-z]{3,20}-{0,1})?([A-Za-z]{3,20})$/.test(firstName)) {
     firstNameErrorMsg.textContent = "enregistré"
     return true;
-  } if (firstName == "") {
-    firstNameErrorMsg.textContent = "Veuillez renseigner votre prénom";
   } else {
     firstNameErrorMsg.textContent = "Veuillez entrer un prénom valide";
-    errorMsg.push("error")
     return false;
   }
 }
-function lastNameValid() {
+//vérifier la validité du nom
+function lastNameValid(lastName) {
   let lastNameErrorMsg = document.getElementById("lastNameErrorMsg");
-  if (/^([A-Za-z]{3,20}-{0,1})?([A-Za-z]{3,20})$/.test(lastName)) {
-    lastNameErrorMsg.textContent = "enregistré"
+  if (lastName !== "" && /^([A-Za-z]{3,20}-{0,1})?([A-Za-z]{3,20})$/.test(lastName)) {
+    lastNameErrorMsg.textContent = "enregistré";
     return true;
-  } if (lastName == "") {
-    lastNameErrorMsg.textContent = "Veuillez renseigner votre nom";
-  }
-  else {
+  } else {
     lastNameErrorMsg.textContent = "Veuillez entrer un nom valide";
-    errorMsg.push("error")
     return false;
   }
 }
-
-function addressValid() {
+//vérifier la validité de l'adresse
+function addressValid(address) {
   let addressErrorMsg = document.getElementById("addressErrorMsg")
-  if (/^[a-zA-Z0-9\s,'-]{1,100}$/.test(address)) {
-    addressErrorMsg.textContent = "enregistré"
+  if (address !== "" && /^[a-zA-Z0-9\s,'-]{1,100}$/.test(address)) {
+    addressErrorMsg.textContent = "enregistré";
     return true;
-  } if (address == "") {
-    addressErrorMsg.textContent = "Veuillez renseigner votre adresse";
   } else {
-    addressErrorMsg.style.color = "red"
-    addressErrorMsg.textContent = "Veuillez entrer une adresse valide"
-    errorMsg.push("error")
+    addressErrorMsg.textContent = "Veuillez entrer une adresse valide";
     return false;
   }
 }
-function cityValid() {
+//vérifier la validité de la ville
+function cityValid(city) {
   let cityErrorMsg = document.getElementById("cityErrorMsg")
-  if (/^[a-zA-Zéèàïêç\-\s]{2,30}$/.test(city)) {
-    cityErrorMsg.textContent = "enregistré"
+  if (city !== "" && /^[a-zA-Zéèàïêç\-\s]{2,30}$/.test(city)) {
+    cityErrorMsg.textContent = "enregistré";
     return true;
-  } if (city == "") {
-    cityErrorMsg.textContent = "Veuillez renseigner votre ville";
   } else {
-    cityErrorMsg.style.color = "red"
     cityErrorMsg.textContent = "Veuillez entrer une ville valide";
-    errorMsg.push("error")
     return false;
   }
 }
-function emailValid() {
+//vérifier la validité de l'email
+function emailValid(email) {
   let emailErrorMsg = document.getElementById("emailErrorMsg")
-  if (/^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i.test(email)) {
-    emailErrorMsg.textContent = "enregistré"
+  if (email !== "" && /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i.test(email)) {
+    emailErrorMsg.textContent = "enregistré";
     return true;
-  } if (email == "") {
-    emailErrorMsg.textContent = "Veuillez renseigner votre E-mail";
   } else {
-    emailErrorMsg.style.color = "red";
     emailErrorMsg.textContent = "Veuillez entrer un E-mail valide";
-    errorMsg.push("error")
     return false;
   }
 }
+function formValid() {
+  formOrder();
+  const isValid = [
+    firstNameValid(firstName),
+    lastNameValid(lastName),
+    addressValid(address),
+    cityValid(city),
+    emailValid(email)
+  ]
+  return isValid.every(Boolean)
+}
+//ajouter l'evenement click pour valider le formulaire*/
+const orderButton = document.querySelector("#order")
+orderButton.addEventListener("click", (e) => {
+  e.preventDefault();
+  if (cartPanier.length == 0){
+    alert("panier vide")
+  } else{
+     if (formValid()) {
+      orderRequest()
+    } else {
+    alert("formulaire non valide")
+    }
+  }
+})
 
 function orderRequest() {
   let contact = {
@@ -310,27 +264,29 @@ function orderRequest() {
     city: city,
     email: email,
   }
-  console.log(contact)
   let products = []
   cartPanier.forEach(element => {
     products.push(element.Id);
     console.log(products)
   });
-
-  let object = {contact, products}
+  let object = { contact, products }
   console.log(object)
-  fetch("http://localhost:3000/api/products/order",{
-    method:"POST",
-    headers:{
-      'Accept' : 'application/json',
+  fetch("http://localhost:3000/api/products/order", {
+    method: "POST",
+    headers: {
+      'Accept': 'application/json',
       "Content-Type": 'application/json; charset=utf-8'
     },
     body: JSON.stringify(object),
   })
-  .then ((response) =>{
-    return response.json(); }
-  )
-    .then(data => {
-      return console.log(data);
-    }) 
-  }
+    .then((response) => {
+      return response.json();
+    }
+    )
+    .then((data) => {
+      const orderId = data.orderId
+      console.log(orderId)
+      window.location.href = "confirmation.html" + "?orderId=" + orderId
+    })
+    .catch((err) => console.error(err))
+}
