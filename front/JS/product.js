@@ -1,21 +1,3 @@
-/*const queryString = window.location.search
-const urlParams = new URLSearchParams(queryString)
-const id = urlParams.get("id")
-
-fetch('http://localhost:3000/api/products/${id}')
-    .then((response) => response.json())
-    .then((res) => handleData(res))
-
-function handleData(product) {
-    const altTxt = product.altTxt
-    const colors = product.colors
-    const description = product.description
-    const imageUrl = product.imageUrl
-    const price = product.price
-    const _id = product._id
-
-}
-*/
 (async function() {
     const productId = getProductId()
     const product = await getProduct(productId)
@@ -23,9 +5,8 @@ function handleData(product) {
 })()
 
 function getProductId() {
-    return new URL(location.href).searchParams.get("id")
+    return new URL(location.href).searchParams.get("id");
 }
-
 function getProduct(productId) {
     return fetch(`http://localhost:3000/api/products/${productId}`)
         .then (function(response){
@@ -55,15 +36,18 @@ if (button != null) {
     button.addEventListener("click", (e) => {
         const itemQuantity = document.getElementById("quantity").value
         const color = document.getElementById("colors").value
-        if (color == null || color == "" || itemQuantity == null || itemQuantity == 0) {
-            alert("please select color and quantity")
+        if (color == null || color == ""){
+            alert("please select color")
+            return
+        }
+        if (itemQuantity == null || itemQuantity == 0 || itemQuantity>100){
+            alert("Veuillez choisir une quantité comprise entre 0 et 100");
             return
         }
     let cart = {
             Id: getProductId(),
             color: color,
             quantity: parseInt(itemQuantity),
-            
         }
         let panier = JSON.parse(localStorage.getItem("cart"));
         console.log(panier)
