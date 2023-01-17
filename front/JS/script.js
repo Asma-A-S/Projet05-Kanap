@@ -1,10 +1,13 @@
 /*fonction asynchrone, d'abord elle récupère les products avec la fonction getProducts, 
-ensuite pour chaque produit de ces produit, elle appelle la focntion displayProduct
+ensuite pour chaque produit de ces produit, elle appelle la fonction displayProduct
 (afficher les informations du produit)*/
 (async function() {
     const products = await getProducts()
     for (product of products) {
-        displayProduct(product)
+        console.log(product)
+        let prod = CreateProductCard(product._id, product.name, product.description, product.imageUrl, product.altTxt);
+        console.log(prod)
+        prod.getProductCard()
     }
 })()
 //récupération des produits de l'API avec une requête GET et renvoie des produits (products)
@@ -20,66 +23,27 @@ function getProducts() {
             alert(error);
         })
 }
-//insertion des produits dans le DOM 
-//modèle
-function displayProduct(product){
-class ProductCard {
-    constructor(product) {
-        this._id = product._id
-        this._name = product.name
-        this._description = product.description
-        this._imageUrl = product.imageUrl
-        this._altTxt = product.altTxt
-    }
-    get id() {
-        return this._id
-    }
-    get name() {
-        return this._name
-    }
-    get description() {
-        return this._description
-    }
-    get imageUrl() {
-        return this._imageUrl
-    }
-    get altTxt() {
-        return this._altTxt
-    }
-}
-//template
-class ElementCard {
-    constructor(element) {
-        this._element = element
-    }
-    createElementCard(){
-        const conteneur= document.getElementById("items")
-        const elementCard = `
-        <a href ="./product.html?id=${this._element._id}">
-            <article>
-                <img 
-                    src="${this._element.imageUrl}" 
-                    alt="${this._element.altTxt}"
-                />
-                <h3 class="productName">${this._element.name}</h3>
-                <p class="productDescription">${this._element.description}</p>
-            </article>
-        </a>`
-        conteneur.innerHTML = elementCard
-        return conteneur
-    }
-}
-}
-/*function displayProduct(){
-    document.getElementById("items").innerHTML += `
-        <a href ="./product.html?id=${product._id}">
-            <article>
-                <img 
-                    src="${product.imageUrl}" 
-                    alt="${product.altTxt}"
-                />
-                <h3 class="productName">${product.name}</h3>
-                <p class="productDescription">${product.description}</p>
-            </article>
-        </a>`
-}*/
+//factory function pour affichage des produits d'une façon dynamique
+function CreateProductCard(id, name, description, imageUrl, altTxt) {
+    return {
+        id,
+        name,
+        description,
+        imageUrl,
+        altTxt,
+        getProductCard(){
+            let items = document.getElementById("items");
+            const productCard = `
+                <a href ="./product.html?id=${this.id}">
+                    <article>
+                        <img 
+                            src="${this.imageUrl}" 
+                            alt="${this.altTxt}"
+                        />
+                        <h3 class="productName">${this.name}</h3>
+                        <p class="productDescription">${this.description}</p>
+                    </article>
+                </a>`;
+            items.innerHTML += productCard;
+        }
+        }}
