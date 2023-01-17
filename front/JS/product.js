@@ -59,7 +59,7 @@ button.addEventListener("click", (e) => {
     }
     //récupération des données du panier enregistrée dans le localStorage
     let panier = JSON.parse(localStorage.getItem("cart"));
-    function popupConfirmation(){
+    function confirmation(){
         if (window.confirm("Article ajouté, cliquer sur ok pour être redirigé vers le pnaier")){
             window.location.href ="cart.html"
         }
@@ -69,7 +69,7 @@ button.addEventListener("click", (e) => {
         panier = [];
         panier.push(cart);
         localStorage.setItem("cart", JSON.stringify(panier))
-        popupConfirmation()
+        confirmation()
     }
     //si le panier n'est pas vide
     else if (panier){
@@ -81,12 +81,12 @@ button.addEventListener("click", (e) => {
         if (panierExist) {
             let newQuantity = parseInt(panierExist.quantity) + cart.quantity;
             panierExist.quantity = newQuantity;
-            popupConfirmation()
+            confirmation()
         }
         //sinon, on ajoute l'article au panier
         else {
             panier.push(cart)
-            popupConfirmation()
+            confirmation()
         }
         //on enregistre le panier mis à jour dans le localStorage
         localStorage.setItem("cart", JSON.stringify(panier));
