@@ -132,7 +132,6 @@ function deleteProduct() {
     )
   }
 }
-
 //total quantité
 //créer un tableau qui rassemblera les valeurs des prix articles qui ont même I
 let total = []
@@ -155,7 +154,6 @@ function totalQuantityPrice(item) {
   } 
 }
 //valider la commande
-
 function formOrder() {
   const form = document.querySelector(".cart__order__form");
   //récupérer les éléments du formulaire

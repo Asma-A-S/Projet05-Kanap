@@ -1,12 +1,15 @@
+//fonction s'auto-appelle, récupère l'Id du produit et renvoie le produit d'une façon dynamique.
+//ensuite elle exécute la fonction hydrateProduct
 (async function() {
     const productId = getProductId()
     const product = await getProduct(productId)
     hydrateProduct(product)
 })()
-
+//récupérer l'Id du produit
 function getProductId() {
     return new URL(location.href).searchParams.get("id");
 }
+//récupérer le produit de l'API avec son Identifiant en envoayant une requête GET. cette requette renvoie le produit comme réponse
 function getProduct(productId) {
     return fetch(`http://localhost:3000/api/products/${productId}`)
         .then (function(response){
@@ -19,6 +22,7 @@ function getProduct(productId) {
             alert(error);
         })
 }
+//la fonction prend en paramètre product (la réponse de la requête fetch) et hydrate la carte du produit 
 function hydrateProduct(product) {
     document.querySelector("#title").textContent = product.name
     document.getElementById("price").textContent = product.price
@@ -36,6 +40,7 @@ if (button != null) {
     button.addEventListener("click", (e) => {
         const itemQuantity = document.getElementById("quantity").value
         const color = document.getElementById("colors").value
+    
         if (color == null || color == ""){
             alert("please select color")
             return
